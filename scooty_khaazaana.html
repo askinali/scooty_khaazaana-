@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Scooty KHAZAANA Animation</title>
+<style>
+  html,body{margin:0;height:100%;width:100%;background:transparent;overflow:hidden}
+  /* moving container that follows border */
+  .wrap{
+    position:fixed;
+    top:0;left:0;
+    width:180px;height:120px;
+    pointer-events:none;
+    z-index:9999999;
+    animation:drive 10s linear infinite;
+    transform-origin: center;
+  }
+  .scooty{
+    width:110px; position:absolute; top:0; left:0;
+    filter:drop-shadow(0 6px 12px rgba(0,0,0,0.45));
+  }
+  /* orange ribbon with black text */
+  .ribbon{
+    position:absolute;
+    top:42px;
+    left:-95px;
+    background:#ff9800;
+    color:#000;
+    padding:4px 14px;
+    font-size:14px;
+    font-weight:700;
+    border-radius:4px;
+    box-shadow:0 4px 10px rgba(0,0,0,0.25);
+    white-space:nowrap;
+    transform:skewX(-10deg);
+    animation:wave .6s ease-in-out infinite alternate;
+  }
+  @keyframes wave{from{transform:skewX(-10deg) translateY(0)}to{transform:skewX(-10deg) translateY(-4px)}}
+  /* drive path */
+  @keyframes drive{
+    0%   {top:0; left:0; transform:scaleX(1)}
+    25%  {top:0; left:calc(100vw - 180px); transform:scaleX(1)}
+    35%  {top:0; left:calc(100vw - 180px); transform:scaleX(-1)}
+    50%  {top:calc(100vh - 180px); left:calc(100vw - 180px); transform:scaleX(-1)}
+    65%  {top:calc(100vh - 180px); left:0; transform:scaleX(1)}
+    80%  {top:calc(100vh - 180px); left:0; transform:scaleX(-1)}
+    100% {top:0; left:0; transform:scaleX(-1)}
+  }
+  /* ensure the ribbon visually flips behind scooty by keeping it inside the container */
+  .wrap[dir="r"] .ribbon { left:-95px; transform:skewX(-10deg); }
+  .wrap[dir="l"] .ribbon { left:110px; transform:skewX(10deg); }
+</style>
+</head>
+<body>
+<div class="wrap" id="wrap" dir="r">
+  <div class="ribbon">KHAZAANA</div>
+  <img class="scooty" src="/mnt/data/Purple_And_Green_Modern_Home_Delivery_Service_Email_Header__22_-removebg-preview.png" alt="scooty">
+</div>
+
+<script>
+/* small script to flip ribbon side visually during animation phases by reading current position.
+   This script is safe when hosted normally (won't run inside Google Sites srcdoc) but included
+   so when you host this HTML it behaves correctly. */
+(function(){
+  const wrap = document.getElementById('wrap');
+  // determine direction by tracking previous left value
+  let prevLeft = 0;
+  function tick(){
+    const rect = wrap.getBoundingClientRect();
+    const left = Math.round(rect.left);
+    // if moving right (left increasing), set dir=r else dir=l
+    if (left >= prevLeft) wrap.setAttribute('dir', 'r');
+    else wrap.setAttribute('dir', 'l');
+    prevLeft = left;
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+})();
+</script>
+</body>
+</html>
